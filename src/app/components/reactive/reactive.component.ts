@@ -1,17 +1,15 @@
-import {AfterViewInit, Component, DoCheck, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import {
-  combineLatest, combineLatestWith,
+  combineLatestWith,
   debounceTime,
-  distinctUntilChanged, filter,
-  fromEvent,
-  map, mergeMap,
+  distinctUntilChanged,
+  map,
   Observable, of,
   startWith,
   Subject,
   switchMap
 } from "rxjs";
 import {ProductService} from "../../services/product.service";
-import {fromPromise} from "rxjs/internal/observable/innerFrom";
 import {FormControl} from "@angular/forms";
 
 
@@ -20,16 +18,17 @@ import {FormControl} from "@angular/forms";
   templateUrl: './reactive.component.html',
   styleUrls: ['./reactive.component.css']
 })
-export class ReactiveComponent implements AfterViewInit, DoCheck {
+export class ReactiveComponent implements OnInit {
+
   refreshNotified$ = new Subject()
+
   titles$: Observable<string[]> | null = null;
+
   search = new FormControl<string | null>(null);
 
-  constructor(private readonly productService: ProductService) {
-  }
+  constructor(private readonly productService: ProductService) {}
 
-  ngAfterViewInit() {
-
+  ngOnInit() {
     this.titles$ = this.search.valueChanges
       .pipe(
         distinctUntilChanged(),
@@ -43,10 +42,6 @@ export class ReactiveComponent implements AfterViewInit, DoCheck {
                  map(item => item.products.map(product => product.title)))
              : of([]))
       )
-  }
-
-  ngDoCheck(): void {
-    console.log('ReactiveComponent => ngDoCheck()')
   }
 
   onRefreshClick() {
