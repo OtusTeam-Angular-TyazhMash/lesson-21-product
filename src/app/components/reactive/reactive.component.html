@@ -1,1 +1,10 @@
-<p>reactive works!</p>
+<h2>Reactive</h2>
+<div>
+  <input #search>
+  <button #refresh>Refresh</button>
+</div>
+<div *ngFor="let title of titles$ | async ">
+  {{title}}
+</div>
+
+

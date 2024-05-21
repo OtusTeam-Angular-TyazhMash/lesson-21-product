@@ -7,6 +7,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {ProductService} from "../../services/product.service";
+import {fromPromise} from "rxjs/internal/observable/innerFrom";
+import {combineLatestWith, lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-imperative',
@@ -31,7 +33,7 @@ export class ImperativeComponent implements DoCheck, AfterViewInit {
     private readonly productService: ProductService) {}
 
   private getProducts(search: string) {
-      this.productService.getProducts(search)
+      lastValueFrom(this.productService.getProducts(search))
         .then(productsResponse => productsResponse.products.map(item => item.title))
         .then(titles => {
 
