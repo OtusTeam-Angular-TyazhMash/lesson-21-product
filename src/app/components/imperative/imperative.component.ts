@@ -49,7 +49,12 @@ export class ImperativeComponent {
 
   onRefreshClicked() {
     if (this.lastSearch !== '') {
-      this.getProducts(this.lastSearch)
+      if (this.sendRequestTimeoutId) {
+        clearTimeout(this.sendRequestTimeoutId)
+      }
+      this.sendRequestTimeoutId = setTimeout(() => {
+        this.getProducts(this.lastSearch)
+      }, 500)
     }
   }
 }
