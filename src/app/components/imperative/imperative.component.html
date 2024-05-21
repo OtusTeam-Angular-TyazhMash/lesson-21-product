@@ -1,7 +1,7 @@
 <h2>Imperative</h2>
 <div>
-  <input #search>
-  <button #refresh>Refresh</button>
+  <input (input)="onSearchChanged($event)">
+  <button (click)="onRefreshClicked()">Refresh</button>
 </div>
 <div *ngFor="let title of titles">
   {{title}}

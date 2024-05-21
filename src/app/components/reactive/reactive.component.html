@@ -1,7 +1,7 @@
 <h2>Reactive</h2>
 <div>
-  <input #search>
-  <button #refresh>Refresh</button>
+  <input [formControl]="search">
+  <button (click)="onRefreshClick()">Refresh</button>
 </div>
 <div *ngFor="let title of titles$ | async ">
   {{title}}

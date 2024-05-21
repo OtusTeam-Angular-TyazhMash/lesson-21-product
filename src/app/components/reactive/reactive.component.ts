@@ -12,6 +12,7 @@ import {
 } from "rxjs";
 import {ProductService} from "../../services/product.service";
 import {fromPromise} from "rxjs/internal/observable/innerFrom";
+import {FormControl} from "@angular/forms";
 
 
 @Component({
@@ -21,44 +22,34 @@ import {fromPromise} from "rxjs/internal/observable/innerFrom";
 })
 export class ReactiveComponent implements AfterViewInit, DoCheck {
   refreshNotified$ = new Subject()
-
   titles$: Observable<string[]> | null = null;
-  @ViewChild('search')
-  searchInputElement: ElementRef<HTMLInputElement> | null = null;
-
-  @ViewChild("refresh")
-  refreshButtonElement: ElementRef<HTMLButtonElement> | null = null;
-
+  search = new FormControl<string | null>(null);
 
   constructor(private readonly productService: ProductService) {
   }
 
   ngAfterViewInit() {
 
-    this.titles$ = fromEvent(this.searchInputElement!.nativeElement, 'input')
+    this.titles$ = this.search.valueChanges
       .pipe(
-        map(e => {
-          const {value} = e.target as HTMLInputElement
-          return value
-        }),
         distinctUntilChanged(),
-        debounceTime(500),
         combineLatestWith(this.refreshNotified$.pipe(startWith(undefined))),
+        debounceTime(500),
         map(([search, _]) => search),
         switchMap(search =>
-           Boolean(search)
+           search
              ? this.productService.getProducts(search)
                .pipe(
                  map(item => item.products.map(product => product.title)))
              : of([]))
       )
-
-    this.refreshButtonElement?.nativeElement.addEventListener('click', () => {
-      this.refreshNotified$.next(undefined)
-    })
   }
 
   ngDoCheck(): void {
     console.log('ReactiveComponent => ngDoCheck()')
+  }
+
+  onRefreshClick() {
+    this.refreshNotified$.next(undefined)
   }
 }
