@@ -7,6 +7,7 @@ import { ImperativeComponent } from './components/imperative/imperative.componen
 import { ReactiveComponent } from './components/reactive/reactive.component';
 import {ReactiveFormsModule} from "@angular/forms";
 
+
 @NgModule({
   declarations: [
     AppComponent,
