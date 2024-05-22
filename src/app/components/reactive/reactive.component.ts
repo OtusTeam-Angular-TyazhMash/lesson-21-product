@@ -20,7 +20,7 @@ import {FormControl} from "@angular/forms";
 })
 export class ReactiveComponent implements OnInit {
 
-  refreshNotified$ = new Subject()
+  refreshNotified$ = new Subject<void>()
 
   titles$: Observable<string[]> | null = null;
 
@@ -32,7 +32,7 @@ export class ReactiveComponent implements OnInit {
     this.titles$ = this.search.valueChanges
       .pipe(
         distinctUntilChanged(),
-        combineLatestWith(this.refreshNotified$.pipe(startWith(undefined))),
+        combineLatestWith(this.refreshNotified$.pipe(startWith())),
         debounceTime(500),
         map(([search, _]) => search),
         switchMap(search =>
@@ -45,6 +45,6 @@ export class ReactiveComponent implements OnInit {
   }
 
   onRefreshClick() {
-    this.refreshNotified$.next(undefined)
+    this.refreshNotified$.next()
   }
 }

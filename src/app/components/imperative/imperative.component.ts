@@ -40,6 +40,7 @@ export class ImperativeComponent {
         this.lastSearch = value;
         return
       }
+
       if (value !== this.lastSearch) {
         this.lastSearch = value;
         this.getProducts(value);
@@ -49,9 +50,11 @@ export class ImperativeComponent {
 
   onRefreshClicked() {
     if (this.lastSearch !== '') {
+
       if (this.sendRequestTimeoutId) {
         clearTimeout(this.sendRequestTimeoutId)
       }
+
       this.sendRequestTimeoutId = setTimeout(() => {
         this.getProducts(this.lastSearch)
       }, 500)
